@@ -18,6 +18,7 @@ db.exec(`
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     kategorie TEXT NOT NULL,
+    unterkategorie TEXT,
     farbe TEXT NOT NULL,
     saison TEXT NOT NULL,
     foto TEXT,
@@ -31,6 +32,12 @@ db.exec(`
     erstellt TEXT NOT NULL
   );
 `);
+
+// Migration fuer Datenbanken, die vor der Unterkategorie-Spalte angelegt wurden.
+const teileSpalten = db.prepare("PRAGMA table_info(teile)").all().map((s) => s.name);
+if (!teileSpalten.includes("unterkategorie")) {
+  db.exec("ALTER TABLE teile ADD COLUMN unterkategorie TEXT");
+}
 
 const app = express();
 app.use(express.json({ limit: "12mb" }));
@@ -69,7 +76,7 @@ app.get("/api/alles", (req, res) => {
 });
 
 app.post("/api/teile", (req, res) => {
-  const { name, kategorie, farbe, saison, foto } = req.body || {};
+  const { name, kategorie, unterkategorie, farbe, saison, foto } = req.body || {};
 
   if (!name || !kategorie) {
     return res.status(400).json({ fehler: "name und kategorie sind Pflichtfelder" });
@@ -81,14 +88,15 @@ app.post("/api/teile", (req, res) => {
   const saisonJson = JSON.stringify(Array.isArray(saison) ? saison : []);
 
   db.prepare(
-    `INSERT INTO teile (id, name, kategorie, farbe, saison, foto, erstellt)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`
-  ).run(id, name, kategorie, farbe || "", saisonJson, dateiname, erstellt);
+    `INSERT INTO teile (id, name, kategorie, unterkategorie, farbe, saison, foto, erstellt)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+  ).run(id, name, kategorie, unterkategorie || null, farbe || "", saisonJson, dateiname, erstellt);
 
   res.status(201).json({
     id,
     name,
     kategorie,
+    unterkategorie: unterkategorie || null,
     farbe: farbe || "",
     saison: Array.isArray(saison) ? saison : [],
     foto: dateiname,

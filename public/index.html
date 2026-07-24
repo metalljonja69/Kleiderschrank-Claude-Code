@@ -162,8 +162,21 @@
   }
 
   .karte .name {
-    padding: 8px 10px 10px;
+    padding: 8px 10px 0;
     font-size: 14px;
+  }
+
+  .unterkat {
+    padding: 2px 10px 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-size: 9px;
+    color: var(--kreide-matt);
+  }
+
+  .picker-item .unterkat {
+    padding: 0;
   }
 
   .loeschen-btn {
@@ -582,6 +595,11 @@
         </select>
       </div>
 
+      <div class="feld" id="unterkategorie-feld" style="display:none;">
+        <label class="mono-label" for="teil-unterkategorie">Untergruppe</label>
+        <select id="teil-unterkategorie"></select>
+      </div>
+
       <div class="feld">
         <label class="mono-label" for="teil-farbe">Farbe</label>
         <input type="color" id="teil-farbe" value="#98A1AE">
@@ -621,6 +639,10 @@
     accessoire: "Accessoires",
   };
   const SAISONEN = ["Frühling", "Sommer", "Herbst", "Winter"];
+  const UNTERKATEGORIEN = {
+    oberteil: ["T-Shirt", "Pulli", "Jacke"],
+    hose: ["Kurz", "Lang"],
+  };
 
   let teile = [];
   let outfits = [];
@@ -708,6 +730,7 @@
         <div class="karte" data-id="${t.id}">
           <div class="kachel" style="${kachelStil(t)}"></div>
           <div class="name">${escapeHtml(t.name)}</div>
+          ${t.unterkategorie ? `<div class="unterkat">${escapeHtml(t.unterkategorie)}</div>` : ""}
           <button class="loeschen-btn" data-loeschen="${t.id}">&times;</button>
         </div>`
       )
@@ -739,12 +762,32 @@
     document.getElementById("foto-vorschau").textContent = "Kein Foto";
     document.getElementById("teil-fehler").textContent = "";
     renderSaisonListe();
+    aktualisiereUnterkategorie();
     overlayTeil.classList.add("sichtbar");
   });
 
   document.getElementById("teil-schliessen").addEventListener("click", () => {
     overlayTeil.classList.remove("sichtbar");
   });
+
+  function aktualisiereUnterkategorie() {
+    const kategorie = document.getElementById("teil-kategorie").value;
+    const feld = document.getElementById("unterkategorie-feld");
+    const select = document.getElementById("teil-unterkategorie");
+    const optionen = UNTERKATEGORIEN[kategorie];
+
+    if (optionen) {
+      select.innerHTML =
+        `<option value="">– keine Angabe –</option>` +
+        optionen.map((o) => `<option value="${o}">${o}</option>`).join("");
+      feld.style.display = "";
+    } else {
+      select.innerHTML = "";
+      feld.style.display = "none";
+    }
+  }
+
+  document.getElementById("teil-kategorie").addEventListener("change", aktualisiereUnterkategorie);
 
   function renderSaisonListe() {
     const el = document.getElementById("saison-liste");
@@ -796,6 +839,7 @@
     e.preventDefault();
     const name = document.getElementById("teil-name").value.trim();
     const kategorie = document.getElementById("teil-kategorie").value;
+    const unterkategorie = document.getElementById("teil-unterkategorie").value || null;
     const farbe = document.getElementById("teil-farbe").value;
     const saison = Array.from(document.querySelectorAll("#saison-liste input:checked")).map((c) => c.value);
     const fehlerEl = document.getElementById("teil-fehler");
@@ -808,7 +852,7 @@
     const res = await fetch("/api/teile", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, kategorie, farbe, saison, foto: fotoDataUrl }),
+      body: JSON.stringify({ name, kategorie, unterkategorie, farbe, saison, foto: fotoDataUrl }),
     });
 
     if (!res.ok) {
@@ -862,6 +906,7 @@
           <button class="picker-item" data-id="${t.id}">
             <div class="kachel" style="aspect-ratio:1/1; ${kachelStil(t)}"></div>
             <div class="pname">${escapeHtml(t.name)}</div>
+            ${t.unterkategorie ? `<div class="unterkat">${escapeHtml(t.unterkategorie)}</div>` : ""}
           </button>`
         )
         .join("");
