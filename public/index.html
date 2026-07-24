@@ -6,17 +6,18 @@
 <title>Kleiderschrank</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Instrument+Serif&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700&family=Chakra+Petch:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
   :root {
-    --wolle: #1A1F28;
-    --wolle2: #232A35;
-    --wolle3: #2C3441;
-    --kreide: #EFEAE0;
-    --kreide-matt: #98A1AE;
-    --linie: rgba(239, 234, 224, .14);
-    --gelb: #E8C15C;
-    --stange: #AEB6C2;
+    --bg: #070912;
+    --bg2: #0e1424;
+    --bg3: #172038;
+    --text: #d9f8ff;
+    --text-muted: #64789e;
+    --linie: rgba(0, 240, 255, .2);
+    --neon: #00f0ff;
+    --neon2: #ff2a6d;
+    --stange: #29e6d6;
   }
 
   * { box-sizing: border-box; }
@@ -24,29 +25,47 @@
   html, body {
     margin: 0;
     padding: 0;
-    background: var(--wolle);
-    color: var(--kreide);
-    font-family: 'Karla', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Chakra Petch', sans-serif;
     -webkit-tap-highlight-color: transparent;
   }
 
   body {
+    position: relative;
     padding-bottom: 76px; /* Platz fuer die untere Tab-Leiste */
     min-height: 100vh;
   }
 
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 240, 255, .035) 0px,
+      rgba(0, 240, 255, .035) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  }
+
   h1, h2, h3 {
-    font-family: 'Instrument Serif', serif;
-    font-weight: 400;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
     margin: 0;
   }
 
   .mono-label {
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Share Tech Mono', monospace;
     text-transform: uppercase;
     letter-spacing: .12em;
     font-size: 11px;
-    color: var(--kreide-matt);
+    color: var(--text-muted);
   }
 
   button {
@@ -59,17 +78,21 @@
     position: sticky;
     top: 0;
     z-index: 10;
-    background: var(--wolle);
+    background: var(--bg);
     border-bottom: 1px solid var(--linie);
     padding: 20px 20px 16px;
   }
 
   header h1 {
-    font-size: 30px;
-    letter-spacing: .01em;
+    font-size: 26px;
+    letter-spacing: .06em;
+    color: var(--neon);
+    text-shadow: 0 0 12px rgba(0, 240, 255, .55);
   }
 
   main {
+    position: relative;
+    z-index: 2;
     max-width: 720px;
     margin: 0 auto;
     padding: 20px;
@@ -85,7 +108,7 @@
     left: 0;
     right: 0;
     display: flex;
-    background: var(--wolle2);
+    background: var(--bg2);
     border-top: 1px solid var(--linie);
     z-index: 20;
   }
@@ -94,17 +117,18 @@
     flex: 1;
     background: none;
     border: none;
-    color: var(--kreide-matt);
+    color: var(--text-muted);
     padding: 12px 4px 14px;
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Share Tech Mono', monospace;
     text-transform: uppercase;
     letter-spacing: .1em;
     font-size: 11px;
   }
 
   nav.tabs button.aktiv {
-    color: var(--gelb);
-    box-shadow: inset 0 2px 0 var(--gelb);
+    color: var(--neon);
+    box-shadow: inset 0 2px 0 var(--neon);
+    text-shadow: 0 0 8px rgba(0, 240, 255, .7);
   }
 
   /* ---------- Filter-Chips ---------- */
@@ -118,12 +142,12 @@
 
   .chip {
     flex: none;
-    background: var(--wolle2);
+    background: var(--bg2);
     border: 1px solid var(--linie);
-    color: var(--kreide-matt);
-    border-radius: 3px;
+    color: var(--text-muted);
+    border-radius: 2px;
     padding: 7px 14px;
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Share Tech Mono', monospace;
     text-transform: uppercase;
     letter-spacing: .08em;
     font-size: 11px;
@@ -131,9 +155,10 @@
   }
 
   .chip.aktiv {
-    color: var(--wolle);
-    background: var(--gelb);
-    border-color: var(--gelb);
+    color: var(--bg);
+    background: var(--neon);
+    border-color: var(--neon);
+    box-shadow: 0 0 10px rgba(0, 240, 255, .55);
   }
 
   /* ---------- Teile-Grid ---------- */
@@ -145,10 +170,16 @@
 
   .karte {
     position: relative;
-    background: var(--wolle2);
+    background: var(--bg2);
     border: 1px solid var(--linie);
-    border-radius: 3px;
+    border-radius: 2px;
     overflow: hidden;
+    transition: box-shadow .15s ease, border-color .15s ease;
+  }
+
+  .karte:hover {
+    border-color: var(--neon);
+    box-shadow: 0 0 14px rgba(0, 240, 255, .25);
   }
 
   .kachel {
@@ -168,11 +199,12 @@
 
   .unterkat {
     padding: 2px 10px 10px;
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Share Tech Mono', monospace;
     text-transform: uppercase;
     letter-spacing: .08em;
     font-size: 9px;
-    color: var(--kreide-matt);
+    color: var(--neon);
+    opacity: .75;
   }
 
   .picker-item .unterkat {
@@ -185,19 +217,25 @@
     right: 6px;
     width: 26px;
     height: 26px;
-    border-radius: 3px;
+    border-radius: 2px;
     border: 1px solid var(--linie);
-    background: rgba(26, 31, 40, .72);
-    color: var(--kreide);
+    background: rgba(7, 9, 18, .75);
+    color: var(--text);
     font-size: 14px;
     line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: border-color .15s ease, color .15s ease;
+  }
+
+  .loeschen-btn:hover {
+    border-color: var(--neon2);
+    color: var(--neon2);
   }
 
   .leer-hinweis {
-    color: var(--kreide-matt);
+    color: var(--text-muted);
     font-size: 14px;
     padding: 40px 0;
     text-align: center;
@@ -210,13 +248,13 @@
     bottom: 92px;
     width: 52px;
     height: 52px;
-    border-radius: 3px;
-    background: var(--gelb);
-    color: var(--wolle);
+    border-radius: 2px;
+    background: var(--neon);
+    color: var(--bg);
     border: none;
     font-size: 26px;
     z-index: 15;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, .35);
+    box-shadow: 0 0 18px rgba(0, 240, 255, .6), 0 4px 14px rgba(0, 0, 0, .5);
   }
 
   /* ---------- Outfit bauen: die Stange ---------- */
@@ -237,11 +275,11 @@
   }
 
   .stange {
-    height: 4px;
+    height: 3px;
     background: var(--stange);
     border-radius: 2px;
     margin: 0 6px 0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
+    box-shadow: 0 0 10px rgba(41, 230, 214, .8);
   }
 
   .haken {
@@ -268,7 +306,7 @@
     min-width: 0;
     background: none;
     border: none;
-    color: var(--kreide);
+    color: var(--text);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -278,27 +316,28 @@
   .slot-kachel {
     width: 100%;
     aspect-ratio: 1 / 1;
-    border-radius: 3px;
+    border-radius: 2px;
     border: 1px dashed var(--linie);
     background-size: cover;
     background-position: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--kreide-matt);
+    color: var(--text-muted);
     font-size: 22px;
   }
 
   .slot.gefuellt .slot-kachel {
-    border: 1px solid var(--linie);
+    border: 1px solid var(--neon);
+    box-shadow: 0 0 10px rgba(0, 240, 255, .35);
   }
 
   .slot-label {
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Share Tech Mono', monospace;
     text-transform: uppercase;
     letter-spacing: .06em;
     font-size: 9px;
-    color: var(--kreide-matt);
+    color: var(--text-muted);
     text-align: center;
   }
 
@@ -310,13 +349,19 @@
 
   input[type="text"], select, input[type="color"] {
     width: 100%;
-    background: var(--wolle2);
+    background: var(--bg2);
     border: 1px solid var(--linie);
-    color: var(--kreide);
-    border-radius: 3px;
+    color: var(--text);
+    border-radius: 2px;
     padding: 10px 12px;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Chakra Petch', sans-serif;
     font-size: 15px;
+  }
+
+  input[type="text"]:focus, select:focus, input[type="color"]:focus {
+    outline: none;
+    border-color: var(--neon);
+    box-shadow: 0 0 0 3px rgba(0, 240, 255, .18);
   }
 
   input[type="color"] {
@@ -335,18 +380,23 @@
 
   .primaer-btn {
     width: 100%;
-    background: var(--gelb);
-    color: var(--wolle);
+    background: var(--neon);
+    color: var(--bg);
     border: none;
-    border-radius: 3px;
+    border-radius: 2px;
     padding: 13px;
-    font-weight: 700;
-    font-size: 15px;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 0 16px rgba(0, 240, 255, .4);
   }
 
   .primaer-btn:disabled {
-    background: var(--wolle3);
-    color: var(--kreide-matt);
+    background: var(--bg3);
+    color: var(--text-muted);
+    box-shadow: none;
   }
 
   .saison-liste {
@@ -359,16 +409,16 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    background: var(--wolle2);
+    background: var(--bg2);
     border: 1px solid var(--linie);
-    border-radius: 3px;
+    border-radius: 2px;
     padding: 7px 10px;
     font-size: 13px;
     margin: 0;
   }
 
   .fehler {
-    color: #E88A5C;
+    color: var(--neon2);
     font-size: 13px;
     margin-top: 8px;
     min-height: 16px;
@@ -376,9 +426,9 @@
 
   /* ---------- Outfit-Karten ---------- */
   .outfit-karte {
-    background: var(--wolle2);
+    background: var(--bg2);
     border: 1px solid var(--linie);
-    border-radius: 3px;
+    border-radius: 2px;
     padding: 14px;
     margin-bottom: 14px;
   }
@@ -393,7 +443,7 @@
     width: 52px;
     height: 52px;
     aspect-ratio: auto;
-    border-radius: 3px;
+    border-radius: 2px;
     flex: none;
   }
 
@@ -405,24 +455,30 @@
   }
 
   .outfit-kopf h3 {
-    font-size: 20px;
+    font-size: 17px;
   }
 
   .outfit-datum {
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Share Tech Mono', monospace;
     font-size: 10px;
     letter-spacing: .06em;
-    color: var(--kreide-matt);
+    color: var(--text-muted);
     margin-top: 4px;
   }
 
   .outfit-loeschen {
     background: none;
     border: 1px solid var(--linie);
-    color: var(--kreide-matt);
-    border-radius: 3px;
+    color: var(--text-muted);
+    border-radius: 2px;
     padding: 6px 10px;
     font-size: 12px;
+    transition: border-color .15s ease, color .15s ease;
+  }
+
+  .outfit-loeschen:hover {
+    border-color: var(--neon2);
+    color: var(--neon2);
   }
 
   /* ---------- Overlays / Modals ---------- */
@@ -430,7 +486,7 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(10, 12, 16, .6);
+    background: rgba(3, 4, 8, .75);
     z-index: 50;
     align-items: flex-end;
     justify-content: center;
@@ -441,9 +497,10 @@
   }
 
   .overlay-inhalt {
-    background: var(--wolle2);
-    border-top: 1px solid var(--linie);
-    border-radius: 3px 3px 0 0;
+    background: var(--bg2);
+    border-top: 1px solid var(--neon);
+    box-shadow: 0 -8px 30px rgba(0, 240, 255, .18);
+    border-radius: 2px 2px 0 0;
     width: 100%;
     max-width: 720px;
     max-height: 88vh;
@@ -461,7 +518,7 @@
   .schliessen-btn {
     background: none;
     border: none;
-    color: var(--kreide-matt);
+    color: var(--text-muted);
     font-size: 22px;
     line-height: 1;
   }
@@ -469,14 +526,14 @@
   .foto-vorschau {
     width: 120px;
     height: 120px;
-    border-radius: 3px;
+    border-radius: 2px;
     border: 1px dashed var(--linie);
     background-size: cover;
     background-position: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--kreide-matt);
+    color: var(--text-muted);
     font-size: 12px;
     margin-bottom: 12px;
     text-align: center;
@@ -490,16 +547,16 @@
   }
 
   .picker-item {
-    background: var(--wolle3);
+    background: var(--bg3);
     border: 1px solid var(--linie);
-    border-radius: 3px;
+    border-radius: 2px;
     padding: 6px;
-    color: var(--kreide);
+    color: var(--text);
     text-align: center;
   }
 
   .picker-item .kachel {
-    border-radius: 3px;
+    border-radius: 2px;
     margin-bottom: 6px;
   }
 
@@ -511,8 +568,8 @@
     width: 100%;
     background: none;
     border: 1px solid var(--linie);
-    color: var(--kreide-matt);
-    border-radius: 3px;
+    color: var(--text-muted);
+    border-radius: 2px;
     padding: 10px;
     margin-bottom: 14px;
     font-size: 13px;
