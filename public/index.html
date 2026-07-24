@@ -248,6 +248,29 @@
     color: var(--neon2);
   }
 
+  .bearbeiten-btn {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 26px;
+    height: 26px;
+    border-radius: 2px;
+    border: 1px solid var(--linie);
+    background: rgba(7, 9, 18, .75);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color .15s ease, color .15s ease;
+  }
+
+  .bearbeiten-btn:hover {
+    border-color: var(--neon);
+    color: var(--neon);
+  }
+
   .leer-hinweis {
     color: var(--text-muted);
     font-size: 14px;
@@ -661,7 +684,7 @@
 <div class="overlay" id="overlay-teil">
   <div class="overlay-inhalt">
     <div class="overlay-kopf">
-      <h2>Neues Teil</h2>
+      <h2 id="teil-overlay-titel">Neues Teil</h2>
       <button class="schliessen-btn" id="teil-schliessen">&times;</button>
     </div>
 
@@ -744,6 +767,7 @@
   let outfitAuswahl = {}; // { kategorie: teilId }
   let aktuellerSlot = null;
   let fotoDataUrl = null;
+  let bearbeitenId = null;
 
   function escapeHtml(text) {
     const div = document.createElement("div");
@@ -825,6 +849,7 @@
           <div class="kachel" style="${kachelStil(t)}"></div>
           <div class="name">${escapeHtml(t.name)}</div>
           ${t.unterkategorie ? `<div class="unterkat">${escapeHtml(t.unterkategorie)}</div>` : ""}
+          <button class="bearbeiten-btn" data-bearbeiten="${t.id}">&#9998;</button>
           <button class="loeschen-btn" data-loeschen="${t.id}">&times;</button>
         </div>`
       )
@@ -834,6 +859,14 @@
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
         teilLoeschen(btn.dataset.loeschen);
+      });
+    });
+
+    grid.querySelectorAll("[data-bearbeiten]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const teil = teilNachId(btn.dataset.bearbeiten);
+        if (teil) oeffneBearbeiten(teil);
       });
     });
   }
@@ -849,6 +882,8 @@
   const overlayTeil = document.getElementById("overlay-teil");
 
   document.getElementById("fab-neu").addEventListener("click", () => {
+    bearbeitenId = null;
+    document.getElementById("teil-overlay-titel").textContent = "Neues Teil";
     document.getElementById("teil-formular").reset();
     document.getElementById("teil-farbe").value = "#98A1AE";
     fotoDataUrl = null;
@@ -859,6 +894,39 @@
     aktualisiereUnterkategorie();
     overlayTeil.classList.add("sichtbar");
   });
+
+  function oeffneBearbeiten(teil) {
+    bearbeitenId = teil.id;
+    document.getElementById("teil-overlay-titel").textContent = "Teil bearbeiten";
+    document.getElementById("teil-formular").reset();
+    fotoDataUrl = null;
+    document.getElementById("teil-fehler").textContent = "";
+
+    document.getElementById("teil-name").value = teil.name;
+    document.getElementById("teil-kategorie").value = teil.kategorie;
+    document.getElementById("teil-farbe").value = teil.farbe || "#98A1AE";
+
+    renderSaisonListe();
+    document.querySelectorAll("#saison-liste input").forEach((cb) => {
+      cb.checked = teil.saison.includes(cb.value);
+    });
+
+    aktualisiereUnterkategorie();
+    if (teil.unterkategorie) {
+      document.getElementById("teil-unterkategorie").value = teil.unterkategorie;
+    }
+
+    const vorschau = document.getElementById("foto-vorschau");
+    if (teil.foto) {
+      vorschau.style.backgroundImage = `url('/fotos/${encodeURIComponent(teil.foto)}')`;
+      vorschau.textContent = "";
+    } else {
+      vorschau.style.backgroundImage = "";
+      vorschau.textContent = "Kein Foto";
+    }
+
+    overlayTeil.classList.add("sichtbar");
+  }
 
   document.getElementById("teil-schliessen").addEventListener("click", () => {
     overlayTeil.classList.remove("sichtbar");
@@ -943,10 +1011,22 @@
       return;
     }
 
-    const res = await fetch("/api/teile", {
-      method: "POST",
+    const koerper = { name, kategorie, unterkategorie, farbe, saison };
+    let url = "/api/teile";
+    let methode = "POST";
+
+    if (bearbeitenId) {
+      url = `/api/teile/${bearbeitenId}`;
+      methode = "PUT";
+      if (fotoDataUrl) koerper.foto = fotoDataUrl;
+    } else {
+      koerper.foto = fotoDataUrl;
+    }
+
+    const res = await fetch(url, {
+      method: methode,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, kategorie, unterkategorie, farbe, saison, foto: fotoDataUrl }),
+      body: JSON.stringify(koerper),
     });
 
     if (!res.ok) {
@@ -956,6 +1036,7 @@
     }
 
     overlayTeil.classList.remove("sichtbar");
+    bearbeitenId = null;
     await ladeAlles();
   });
 

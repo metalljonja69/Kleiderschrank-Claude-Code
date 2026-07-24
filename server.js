@@ -104,6 +104,41 @@ app.post("/api/teile", (req, res) => {
   });
 });
 
+app.put("/api/teile/:id", (req, res) => {
+  const bestehend = db.prepare("SELECT * FROM teile WHERE id = ?").get(req.params.id);
+  if (!bestehend) return res.status(404).json({ fehler: "nicht gefunden" });
+
+  const { name, kategorie, unterkategorie, farbe, saison, foto } = req.body || {};
+
+  if (!name || !kategorie) {
+    return res.status(400).json({ fehler: "name und kategorie sind Pflichtfelder" });
+  }
+
+  let dateiname = bestehend.foto;
+  if (foto) {
+    fotoLoeschen(bestehend.foto);
+    dateiname = fotoSpeichern(foto);
+  }
+
+  const saisonJson = JSON.stringify(Array.isArray(saison) ? saison : []);
+
+  db.prepare(
+    `UPDATE teile SET name = ?, kategorie = ?, unterkategorie = ?, farbe = ?, saison = ?, foto = ?
+     WHERE id = ?`
+  ).run(name, kategorie, unterkategorie || null, farbe || "", saisonJson, dateiname, req.params.id);
+
+  res.json({
+    id: req.params.id,
+    name,
+    kategorie,
+    unterkategorie: unterkategorie || null,
+    farbe: farbe || "",
+    saison: Array.isArray(saison) ? saison : [],
+    foto: dateiname,
+    erstellt: bestehend.erstellt,
+  });
+});
+
 app.delete("/api/teile/:id", (req, res) => {
   const teil = db.prepare("SELECT * FROM teile WHERE id = ?").get(req.params.id);
   if (!teil) return res.status(404).json({ fehler: "nicht gefunden" });
