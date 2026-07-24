@@ -90,6 +90,20 @@
     text-shadow: 0 0 12px rgba(0, 240, 255, .55);
   }
 
+  .kopf-reihe {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .panther-icon {
+    flex: none;
+    width: 34px;
+    height: auto;
+    color: var(--neon2);
+    filter: drop-shadow(0 0 6px rgba(255, 42, 109, .65));
+  }
+
   main {
     position: relative;
     z-index: 2;
@@ -579,7 +593,19 @@
 <body>
 
 <header>
-  <h1>Kleiderschrank</h1>
+  <div class="kopf-reihe">
+    <h1>Kleiderschrank</h1>
+    <svg class="panther-icon" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M78 40 C95 35, 95 10, 78 8 C90 12, 88 30, 74 34 Z" fill="currentColor"/>
+      <ellipse cx="45" cy="45" rx="30" ry="18" fill="currentColor"/>
+      <circle cx="20" cy="30" r="14" fill="currentColor"/>
+      <path d="M10 20 L14 6 L20 18 Z" fill="currentColor"/>
+      <path d="M24 18 L30 6 L32 20 Z" fill="currentColor"/>
+      <rect x="25" y="55" width="6" height="14" rx="3" fill="currentColor"/>
+      <rect x="45" y="58" width="6" height="12" rx="3" fill="currentColor"/>
+      <rect x="60" y="55" width="6" height="14" rx="3" fill="currentColor"/>
+    </svg>
+  </div>
 </header>
 
 <main>
