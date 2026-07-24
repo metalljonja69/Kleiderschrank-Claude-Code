@@ -1,0 +1,14 @@
+{
+  "name": "kleiderschrank",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Selbstgehostete Kleiderschrank- und Outfit-App",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.9.1",
+    "express": "^4.21.2"
+  }
+}

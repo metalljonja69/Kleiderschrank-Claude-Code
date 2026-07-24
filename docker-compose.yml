@@ -1,0 +1,9 @@
+services:
+  kleiderschrank:
+    build: .
+    container_name: kleiderschrank
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./daten:/daten
+    restart: unless-stopped
