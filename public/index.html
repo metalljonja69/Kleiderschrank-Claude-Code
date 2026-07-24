@@ -224,6 +224,18 @@
     padding-top: 10px;
   }
 
+  .schienen-scroll {
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+
+  .schienen-inner {
+    display: inline-flex;
+    flex-direction: column;
+    min-width: 100%;
+    padding: 0 4px;
+  }
+
   .stange {
     height: 4px;
     background: var(--stange);
@@ -232,12 +244,8 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
   }
 
-  .stange-enden {
-    display: flex;
-    justify-content: space-between;
-  }
-
   .haken {
+    flex: 0 0 76px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -252,12 +260,11 @@
 
   .schienen-reihe {
     display: flex;
-    justify-content: space-between;
-    gap: 6px;
+    gap: 10px;
   }
 
   .slot {
-    flex: 1;
+    flex: 0 0 76px;
     min-width: 0;
     background: none;
     border: none;
@@ -529,12 +536,16 @@
   <!-- ================= TAB: OUTFIT BAUEN ================= -->
   <section id="tab-bauen" class="tab">
     <div class="stangen-bereich">
+      <div class="schienen-scroll">
+      <div class="schienen-inner">
       <div class="stange"></div>
       <div class="schienen-reihe" id="kordel-reihe">
         <!-- Kordeln werden per JS erzeugt -->
       </div>
       <div class="schienen-reihe" id="slot-reihe">
         <!-- Slots werden per JS erzeugt -->
+      </div>
+      </div>
       </div>
     </div>
 
@@ -867,34 +878,56 @@
 
   // ---------------- Tab: Outfit bauen ----------------
 
+  // Fuer Kategorien mit Untergruppen gibt es einen eigenen Slot pro Untergruppe
+  // (z.B. Oberteil::T-Shirt und Oberteil::Pulli getrennt), damit man beides
+  // gleichzeitig anziehen kann. Kategorien ohne Untergruppen bekommen einen Slot.
+  function baueSlots() {
+    const slots = [];
+    KATEGORIEN.forEach((k) => {
+      const unterkats = UNTERKATEGORIEN[k];
+      if (unterkats) {
+        unterkats.forEach((u) => slots.push({ id: `${k}::${u}`, kategorie: k, unterkategorie: u, label: u }));
+      } else {
+        slots.push({ id: k, kategorie: k, unterkategorie: null, label: KATEGORIE_LABEL[k] });
+      }
+    });
+    return slots;
+  }
+
   function renderRail() {
+    const slots = baueSlots();
     const kordelReihe = document.getElementById("kordel-reihe");
     const slotReihe = document.getElementById("slot-reihe");
 
-    kordelReihe.innerHTML = KATEGORIEN.map(() => `<div class="haken" style="flex:1"><div class="kordel"></div></div>`).join("");
+    kordelReihe.innerHTML = slots.map(() => `<div class="haken"><div class="kordel"></div></div>`).join("");
 
-    slotReihe.innerHTML = KATEGORIEN.map((k) => {
-      const teilId = outfitAuswahl[k];
-      const teil = teilId ? teilNachId(teilId) : null;
-      return `
-        <button class="slot ${teil ? "gefuellt" : ""}" data-kat="${k}">
+    slotReihe.innerHTML = slots
+      .map((s) => {
+        const teilId = outfitAuswahl[s.id];
+        const teil = teilId ? teilNachId(teilId) : null;
+        return `
+        <button class="slot ${teil ? "gefuellt" : ""}" data-slot="${s.id}">
           <div class="slot-kachel" style="${teil ? kachelStil(teil) : ""}">${teil ? "" : "+"}</div>
-          <div class="slot-label">${KATEGORIE_LABEL[k]}</div>
+          <div class="slot-label">${escapeHtml(s.label)}</div>
         </button>`;
-    }).join("");
+      })
+      .join("");
 
     slotReihe.querySelectorAll(".slot").forEach((btn) => {
-      btn.addEventListener("click", () => offnePicker(btn.dataset.kat));
+      btn.addEventListener("click", () => offnePicker(btn.dataset.slot));
     });
 
     aktualisiereSpeichernButton();
   }
 
-  function offnePicker(kategorie) {
-    aktuellerSlot = kategorie;
-    document.getElementById("picker-titel").textContent = `${KATEGORIE_LABEL[kategorie]} waehlen`;
+  function offnePicker(slotId) {
+    aktuellerSlot = slotId;
+    const slot = baueSlots().find((s) => s.id === slotId);
+    document.getElementById("picker-titel").textContent = `${slot.label} waehlen`;
 
-    const auswahl = teile.filter((t) => t.kategorie === kategorie);
+    const auswahl = teile.filter(
+      (t) => t.kategorie === slot.kategorie && (!slot.unterkategorie || t.unterkategorie === slot.unterkategorie)
+    );
     const grid = document.getElementById("picker-grid");
 
     if (auswahl.length === 0) {
@@ -914,7 +947,7 @@
 
     grid.querySelectorAll(".picker-item").forEach((btn) => {
       btn.addEventListener("click", () => {
-        outfitAuswahl[kategorie] = btn.dataset.id;
+        outfitAuswahl[slotId] = btn.dataset.id;
         schliessePicker();
         renderRail();
       });
