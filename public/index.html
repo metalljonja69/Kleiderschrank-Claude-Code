@@ -6,18 +6,18 @@
 <title>Kleiderschrank</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700&family=Chakra+Petch:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #1a0512;
-    --bg2: #2b0a24;
-    --bg3: #3a1030;
-    --text: #fdeaf5;
-    --text-muted: #b5849f;
-    --linie: rgba(255, 214, 240, .18);
-    --neon: #00f0ff;
-    --neon2: #ff2a6d;
-    --stange: #29e6d6;
+    --bg: #030a04;
+    --bg2: #051a0a;
+    --bg3: #0a2e12;
+    --text: #39ff14;
+    --text-muted: #2e7d32;
+    --linie: rgba(57, 255, 20, .3);
+    --neon: #39ff14;
+    --neon2: #ffb000;
+    --stange: #39ff14;
   }
 
   * { box-sizing: border-box; }
@@ -27,7 +27,7 @@
     padding: 0;
     background: var(--bg);
     color: var(--text);
-    font-family: 'Chakra Petch', sans-serif;
+    font-family: 'Share Tech Mono', monospace;
     -webkit-tap-highlight-color: transparent;
   }
 
@@ -45,18 +45,18 @@
     pointer-events: none;
     background: repeating-linear-gradient(
       0deg,
-      rgba(0, 240, 255, .035) 0px,
-      rgba(0, 240, 255, .035) 1px,
+      rgba(57, 255, 20, .05) 0px,
+      rgba(57, 255, 20, .05) 1px,
       transparent 1px,
       transparent 3px
     );
   }
 
   h1, h2, h3 {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 600;
+    font-family: 'VT323', monospace;
+    font-weight: 400;
     text-transform: uppercase;
-    letter-spacing: .04em;
+    letter-spacing: .06em;
     margin: 0;
   }
 
@@ -84,10 +84,10 @@
   }
 
   header h1 {
-    font-size: 26px;
+    font-size: 36px;
     letter-spacing: .06em;
     color: var(--neon);
-    text-shadow: 0 0 12px rgba(0, 240, 255, .55);
+    text-shadow: 0 0 12px rgba(57, 255, 20, .55);
   }
 
   .kopf-reihe {
@@ -101,7 +101,7 @@
     width: 34px;
     height: auto;
     color: var(--neon2);
-    filter: drop-shadow(0 0 6px rgba(255, 42, 109, .65));
+    filter: drop-shadow(0 0 6px rgba(255, 176, 0, .65));
   }
 
   main {
@@ -142,7 +142,7 @@
   nav.tabs button.aktiv {
     color: var(--neon);
     box-shadow: inset 0 2px 0 var(--neon);
-    text-shadow: 0 0 8px rgba(0, 240, 255, .7);
+    text-shadow: 0 0 8px rgba(57, 255, 20, .7);
   }
 
   /* ---------- Filter-Chips ---------- */
@@ -159,7 +159,7 @@
     background: var(--bg2);
     border: 1px solid var(--linie);
     color: var(--text-muted);
-    border-radius: 2px;
+    border-radius: 0;
     padding: 7px 14px;
     font-family: 'Share Tech Mono', monospace;
     text-transform: uppercase;
@@ -172,7 +172,7 @@
     color: var(--bg);
     background: var(--neon);
     border-color: var(--neon);
-    box-shadow: 0 0 10px rgba(0, 240, 255, .55);
+    box-shadow: 0 0 10px rgba(57, 255, 20, .55);
   }
 
   /* ---------- Teile-Grid ---------- */
@@ -186,14 +186,14 @@
     position: relative;
     background: var(--bg2);
     border: 1px solid var(--linie);
-    border-radius: 2px;
+    border-radius: 0;
     overflow: hidden;
     transition: box-shadow .15s ease, border-color .15s ease;
   }
 
   .karte:hover {
     border-color: var(--neon);
-    box-shadow: 0 0 14px rgba(0, 240, 255, .25);
+    box-shadow: 0 0 14px rgba(57, 255, 20, .25);
   }
 
   .kachel {
@@ -231,7 +231,7 @@
     right: 6px;
     width: 26px;
     height: 26px;
-    border-radius: 2px;
+    border-radius: 0;
     border: 1px solid var(--linie);
     background: rgba(7, 9, 18, .75);
     color: var(--text);
@@ -254,7 +254,7 @@
     left: 6px;
     width: 26px;
     height: 26px;
-    border-radius: 2px;
+    border-radius: 0;
     border: 1px solid var(--linie);
     background: rgba(7, 9, 18, .75);
     color: var(--text);
@@ -285,13 +285,13 @@
     bottom: 92px;
     width: 52px;
     height: 52px;
-    border-radius: 2px;
+    border-radius: 0;
     background: var(--neon);
     color: var(--bg);
     border: none;
     font-size: 26px;
     z-index: 15;
-    box-shadow: 0 0 18px rgba(0, 240, 255, .6), 0 4px 14px rgba(0, 0, 0, .5);
+    box-shadow: 0 0 18px rgba(57, 255, 20, .6), 0 4px 14px rgba(0, 0, 0, .5);
   }
 
   /* ---------- Outfit bauen: die Stange ---------- */
@@ -314,9 +314,9 @@
   .stange {
     height: 3px;
     background: var(--stange);
-    border-radius: 2px;
+    border-radius: 0;
     margin: 0 6px 0;
-    box-shadow: 0 0 10px rgba(41, 230, 214, .8);
+    box-shadow: 0 0 10px rgba(57, 255, 20, .8);
   }
 
   .haken {
@@ -353,7 +353,7 @@
   .slot-kachel {
     width: 100%;
     aspect-ratio: 1 / 1;
-    border-radius: 2px;
+    border-radius: 0;
     border: 1px dashed var(--linie);
     background-size: cover;
     background-position: center;
@@ -366,7 +366,7 @@
 
   .slot.gefuellt .slot-kachel {
     border: 1px solid var(--neon);
-    box-shadow: 0 0 10px rgba(0, 240, 255, .35);
+    box-shadow: 0 0 10px rgba(57, 255, 20, .35);
   }
 
   .slot-label {
@@ -389,16 +389,16 @@
     background: var(--bg2);
     border: 1px solid var(--linie);
     color: var(--text);
-    border-radius: 2px;
+    border-radius: 0;
     padding: 10px 12px;
-    font-family: 'Chakra Petch', sans-serif;
+    font-family: 'Share Tech Mono', monospace;
     font-size: 15px;
   }
 
   input[type="text"]:focus, select:focus, input[type="color"]:focus {
     outline: none;
     border-color: var(--neon);
-    box-shadow: 0 0 0 3px rgba(0, 240, 255, .18);
+    box-shadow: 0 0 0 3px rgba(57, 255, 20, .18);
   }
 
   input[type="color"] {
@@ -420,14 +420,14 @@
     background: var(--neon);
     color: var(--bg);
     border: none;
-    border-radius: 2px;
+    border-radius: 0;
     padding: 13px;
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'VT323', monospace;
     text-transform: uppercase;
     letter-spacing: .06em;
     font-weight: 600;
     font-size: 14px;
-    box-shadow: 0 0 16px rgba(0, 240, 255, .4);
+    box-shadow: 0 0 16px rgba(57, 255, 20, .4);
   }
 
   .primaer-btn:disabled {
@@ -448,7 +448,7 @@
     gap: 6px;
     background: var(--bg2);
     border: 1px solid var(--linie);
-    border-radius: 2px;
+    border-radius: 0;
     padding: 7px 10px;
     font-size: 13px;
     margin: 0;
@@ -465,7 +465,7 @@
   .outfit-karte {
     background: var(--bg2);
     border: 1px solid var(--linie);
-    border-radius: 2px;
+    border-radius: 0;
     padding: 14px;
     margin-bottom: 14px;
   }
@@ -480,7 +480,7 @@
     width: 52px;
     height: 52px;
     aspect-ratio: auto;
-    border-radius: 2px;
+    border-radius: 0;
     flex: none;
   }
 
@@ -492,7 +492,7 @@
   }
 
   .outfit-kopf h3 {
-    font-size: 17px;
+    font-size: 24px;
   }
 
   .outfit-datum {
@@ -507,7 +507,7 @@
     background: none;
     border: 1px solid var(--linie);
     color: var(--text-muted);
-    border-radius: 2px;
+    border-radius: 0;
     padding: 6px 10px;
     font-size: 12px;
     transition: border-color .15s ease, color .15s ease;
@@ -536,8 +536,8 @@
   .overlay-inhalt {
     background: var(--bg2);
     border-top: 1px solid var(--neon);
-    box-shadow: 0 -8px 30px rgba(0, 240, 255, .18);
-    border-radius: 2px 2px 0 0;
+    box-shadow: 0 -8px 30px rgba(57, 255, 20, .18);
+    border-radius: 0;
     width: 100%;
     max-width: 720px;
     max-height: 88vh;
@@ -552,6 +552,10 @@
     margin-bottom: 18px;
   }
 
+  .overlay-kopf h2 {
+    font-size: 28px;
+  }
+
   .schliessen-btn {
     background: none;
     border: none;
@@ -563,7 +567,7 @@
   .foto-vorschau {
     width: 120px;
     height: 120px;
-    border-radius: 2px;
+    border-radius: 0;
     border: 1px dashed var(--linie);
     background-size: cover;
     background-position: center;
@@ -586,14 +590,14 @@
   .picker-item {
     background: var(--bg3);
     border: 1px solid var(--linie);
-    border-radius: 2px;
+    border-radius: 0;
     padding: 6px;
     color: var(--text);
     text-align: center;
   }
 
   .picker-item .kachel {
-    border-radius: 2px;
+    border-radius: 0;
     margin-bottom: 6px;
   }
 
@@ -606,7 +610,7 @@
     background: none;
     border: 1px solid var(--linie);
     color: var(--text-muted);
-    border-radius: 2px;
+    border-radius: 0;
     padding: 10px;
     margin-bottom: 14px;
     font-size: 13px;
